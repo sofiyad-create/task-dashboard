@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sofiya's Task Dashboard</title>
   <style>
@@ -9,283 +9,595 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #0f0f1a;
-      color: #e8e8f0;
-      min-height: 100vh;
-      padding: 40px 24px;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #a78bfa, #60a5fa, #f472b6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
-    }
-
-    header p.date {
-      color: #6b7280;
-      font-size: 0.95rem;
-    }
-
-    .summary {
+      background: #f4f5f7;
+      color: #1a1a2e;
       display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
+      min-height: 100vh;
     }
 
-    .summary-card {
-      background: #1a1a2e;
-      border: 1px solid #2d2d4a;
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 72px;
+      background: #1a1f3a;
+      border-radius: 0 24px 24px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 0;
+      gap: 8px;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 10;
+    }
+
+    .sidebar .logo {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, #ff6b6b, #ff1e7e);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: white; font-weight: 800;
+    }
+
+    .sidebar .nav-icon {
+      width: 44px; height: 44px;
       border-radius: 12px;
-      padding: 16px 28px;
-      text-align: center;
-      min-width: 120px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: #5a6080;
+      font-size: 1.1rem;
+      transition: background 0.2s, color 0.2s;
     }
 
-    .summary-card .number {
-      font-size: 2rem;
-      font-weight: 700;
+    .sidebar .nav-icon:hover { background: #252b4a; color: #fff; }
+    .sidebar .nav-icon.active { background: #2d3460; color: #ff6b6b; }
+
+    .sidebar .avatar {
+      margin-top: auto;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: white; font-size: 0.85rem;
     }
 
-    .summary-card .label {
-      font-size: 0.78rem;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+    /* ── Main ── */
+    .main {
+      margin-left: 72px;
+      flex: 1;
+      padding: 36px 32px;
+      max-width: 1100px;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .header-left h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #1a1f3a;
+    }
+
+    .header-left p {
+      color: #9ca3af;
+      font-size: 0.88rem;
       margin-top: 2px;
     }
 
-    .total .number { color: #a78bfa; }
-    .in-progress .number { color: #60a5fa; }
-    .open .number { color: #fbbf24; }
-
-    .client-section {
-      max-width: 900px;
-      margin: 0 auto 32px auto;
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
-    .client-title {
+    .search {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-size: 0.85rem;
+      color: #6b7280;
+      width: 200px;
+      outline: none;
+    }
+
+    .refresh-btn {
+      background: #1a1f3a;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 18px;
       font-size: 0.85rem;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #a78bfa;
-      margin-bottom: 10px;
-      padding-left: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .refresh-btn:hover { background: #252b4a; }
+
+    /* ── Metric Cards ── */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
     }
 
+    .metric-card {
+      border-radius: 20px;
+      padding: 24px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      bottom: 20px; right: 40px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .metric-card.total    { background: linear-gradient(135deg, #ff6b6b, #ff1e7e); }
+    .metric-card.progress { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .metric-card.open     { background: linear-gradient(135deg, #f093fb, #f5576c); }
+
+    .metric-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
+
+    .metric-number {
+      font-size: 2.6rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .metric-sub {
+      font-size: 0.8rem;
+      opacity: 0.75;
+    }
+
+    .metric-icon {
+      position: absolute;
+      top: 20px; right: 24px;
+      font-size: 1.6rem;
+      opacity: 0.5;
+    }
+
+    /* ── Content Grid ── */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a1f3a;
+    }
+
+    .card-count {
+      font-size: 0.78rem;
+      background: #f4f5f7;
+      color: #6b7280;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    /* ── Status Tabs ── */
+    .status-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: all 0.15s;
+      background: white;
+      color: #6b7280;
+      border-color: #e5e7eb;
+    }
+
+    .tab:hover { border-color: #d1d5db; color: #374151; }
+
+    .tab.active-tab { color: white; border-color: transparent; }
+    .tab.active-tab.all      { background: #1a1f3a; }
+    .tab.active-tab.progress { background: #3b82f6; }
+    .tab.active-tab.open     { background: #f59e0b; }
+    .tab.active-tab.blocked  { background: #ef4444; }
+    .tab.active-tab.done     { background: #22c55e; }
+
+    .tab-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+    }
+    .tab.all .tab-dot      { background: #1a1f3a; }
+    .tab.progress .tab-dot { background: #3b82f6; }
+    .tab.open .tab-dot     { background: #f59e0b; }
+    .tab.blocked .tab-dot  { background: #ef4444; }
+    .tab.done .tab-dot     { background: #22c55e; }
+    .tab.active-tab .tab-dot { background: white; }
+
+    .tab-count {
+      background: rgba(0,0,0,0.08);
+      border-radius: 999px;
+      padding: 1px 7px;
+      font-size: 0.72rem;
+    }
+    .tab.active-tab .tab-count { background: rgba(255,255,255,0.25); }
+
+    /* ── Table ── */
     table {
       width: 100%;
       border-collapse: collapse;
-      background: #1a1a2e;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #2d2d4a;
     }
 
     thead th {
-      background: #16162a;
-      padding: 12px 16px;
       text-align: left;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #6b7280;
+      letter-spacing: 0.07em;
+      color: #9ca3af;
       font-weight: 600;
+      padding: 0 12px 12px 12px;
+      border-bottom: 1px solid #f0f0f5;
     }
 
     tbody tr {
-      border-top: 1px solid #2d2d4a;
       transition: background 0.15s;
     }
 
-    tbody tr:hover { background: #1f1f38; }
+    tbody tr:hover td { background: #fafafa; }
 
     td {
-      padding: 13px 16px;
-      font-size: 0.9rem;
+      padding: 13px 12px;
+      font-size: 0.88rem;
+      border-bottom: 1px solid #f4f5f7;
       vertical-align: middle;
     }
 
-    td.task-name { color: #e8e8f0; }
+    tbody tr:last-child td { border-bottom: none; }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
+    td.task-name { color: #1a1f3a; font-weight: 500; }
+
+    td.client {
+      color: #6b7280;
+      font-size: 0.82rem;
       white-space: nowrap;
     }
 
-    .badge.open      { background: #2d2a1a; color: #fbbf24; border: 1px solid #f59e0b44; }
-    .badge.progress  { background: #1a2540; color: #60a5fa; border: 1px solid #3b82f644; }
-    .badge.done      { background: #162318; color: #4ade80; border: 1px solid #22c55e44; }
-    .badge.blocked   { background: #2a1a1a; color: #f87171; border: 1px solid #ef444444; }
-
-    .dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
+    .client-dot {
       display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: 7px;
+      vertical-align: middle;
     }
 
-    .badge.open .dot     { background: #fbbf24; }
-    .badge.progress .dot { background: #60a5fa; }
-    .badge.done .dot     { background: #4ade80; }
-    .badge.blocked .dot  { background: #f87171; }
-
-    .loading, .error {
-      text-align: center;
-      padding: 80px 20px;
-      color: #6b7280;
-      font-size: 1rem;
+    /* ── Badges ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 0.73rem;
+      font-weight: 700;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
     }
 
-    .error { color: #f87171; }
+    .badge.open     { background: #fff7ed; color: #f59e0b; }
+    .badge.progress { background: #eff6ff; color: #3b82f6; }
+    .badge.done     { background: #f0fdf4; color: #22c55e; }
+    .badge.blocked  { background: #fef2f2; color: #ef4444; }
 
-    footer {
+    .badge .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+    .badge.open .dot     { background: #f59e0b; }
+    .badge.progress .dot { background: #3b82f6; }
+    .badge.done .dot     { background: #22c55e; }
+    .badge.blocked .dot  { background: #ef4444; }
+
+    /* ── Loading / Error ── */
+    .loading, .error-msg {
       text-align: center;
-      margin-top: 48px;
-      color: #3d3d5c;
-      font-size: 0.8rem;
+      padding: 60px;
+      color: #9ca3af;
+    }
+    .error-msg { color: #ef4444; }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #d1d5db;
     }
   </style>
 </head>
 <body>
 
-<div id="app"><div class="loading">Loading your tasks…</div></div>
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="logo">S</div>
+  <div class="nav-icon active" title="Tasks">📋</div>
+  <div class="nav-icon" title="Calendar">📅</div>
+  <div class="nav-icon" title="Activity">⚡</div>
+  <div class="nav-icon" title="Settings">⚙️</div>
+  <div class="avatar">SD</div>
+</nav>
+
+<!-- Main Content -->
+<div class="main">
+  <div class="header">
+    <div class="header-left">
+      <h1 id="greeting">My Tasks</h1>
+      <p id="date-line"></p>
+    </div>
+    <div class="header-right">
+      <input class="search" type="text" placeholder="🔍  Search tasks…" id="search-input"/>
+      <button class="refresh-btn" onclick="loadTasks()">↻ Refresh</button>
+    </div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric-card total">
+      <div class="metric-icon">📌</div>
+      <div class="metric-label">Total Tasks</div>
+      <div class="metric-number" id="count-total">—</div>
+      <div class="metric-sub">Across all clients</div>
+    </div>
+    <div class="metric-card progress">
+      <div class="metric-icon">🔵</div>
+      <div class="metric-label">In Progress</div>
+      <div class="metric-number" id="count-progress">—</div>
+      <div class="metric-sub">Currently active</div>
+    </div>
+    <div class="metric-card open">
+      <div class="metric-icon">🟡</div>
+      <div class="metric-label">Open</div>
+      <div class="metric-number" id="count-open">—</div>
+      <div class="metric-sub">Not yet started</div>
+    </div>
+  </div>
+
+  <div id="status-tabs"></div>
+  <div id="task-content"><div class="loading">Loading your tasks…</div></div>
+
+  <div class="footer" id="footer"></div>
+</div>
 
 <script>
   const API_TOKEN = 'pk_95357634_FPPC81WUERSKVR1COBIVC3CS4BY451WG';
   const USER_ID   = '95357634';
 
-  function getGreeting() {
+  const CLIENT_COLORS = [
+    '#ff6b6b','#667eea','#f093fb','#43e97b','#fa709a',
+    '#4facfe','#f5af19','#a18cd1','#fd7043','#26c6da'
+  ];
+
+  const colorMap = {};
+  let colorIdx = 0;
+  function clientColor(name) {
+    if (!colorMap[name]) colorMap[name] = CLIENT_COLORS[colorIdx++ % CLIENT_COLORS.length];
+    return colorMap[name];
+  }
+
+  function greeting() {
     const h = new Date().getHours();
-    if (h < 12) return '☀️ Good morning';
-    if (h < 18) return '👋 Good afternoon';
-    return '🌙 Good evening';
+    if (h < 12) return '☀️ Good morning, Sofiya!';
+    if (h < 18) return '👋 Good afternoon, Sofiya!';
+    return '🌙 Good evening, Sofiya!';
   }
 
   function formatDate() {
-    return new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    return new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
   }
 
-  function statusClass(status) {
-    const s = status.toLowerCase();
+  function statusClass(s) {
+    s = (s||'').toLowerCase();
     if (s.includes('progress')) return 'progress';
-    if (s.includes('done') || s.includes('complete') || s.includes('published')) return 'done';
+    if (s.includes('done')||s.includes('complet')||s.includes('published')) return 'done';
     if (s.includes('block')) return 'blocked';
     return 'open';
   }
 
-  function statusLabel(status) {
-    const s = status.toLowerCase();
-    if (s.includes('progress')) return 'In Progress';
-    if (s.includes('done') || s.includes('complete') || s.includes('published')) return 'Done';
-    if (s.includes('block')) return 'Blocked';
-    return 'Open';
+  function statusLabel(s) {
+    const c = statusClass(s);
+    return { progress:'In Progress', done:'Done', blocked:'Blocked', open:'Open' }[c];
   }
 
-  function badge(status) {
-    const cls = statusClass(status);
-    return `<span class="badge ${cls}"><span class="dot"></span>${statusLabel(status)}</span>`;
+  function badge(s) {
+    const c = statusClass(s);
+    return `<span class="badge ${c}"><span class="dot"></span>${statusLabel(s)}</span>`;
   }
 
-  async function fetchTasks() {
-    const url = `https://api.clickup.com/api/v2/team/${await getTeamId()}/task?assignees[]=${USER_ID}&include_closed=false&subtasks=true&page=0`;
-    const res = await fetch(url, { headers: { Authorization: API_TOKEN } });
-    const data = await res.json();
-    return data.tasks || [];
-  }
+  let allTasks = [];
+  let activeTab = 'all';
 
   async function getTeamId() {
-    const res = await fetch('https://api.clickup.com/api/v2/team', { headers: { Authorization: API_TOKEN } });
-    const data = await res.json();
-    return data.teams[0].id;
+    const r = await fetch('https://api.clickup.com/api/v2/team', { headers:{ Authorization: API_TOKEN } });
+    const d = await r.json();
+    return d.teams[0].id;
   }
 
-  function groupByClient(tasks) {
+  async function loadTasks() {
+    document.getElementById('task-content').innerHTML = '<div class="loading">Loading your tasks…</div>';
+    try {
+      const teamId = await getTeamId();
+      const r = await fetch(
+        `https://api.clickup.com/api/v2/team/${teamId}/task?assignees[]=${USER_ID}&include_closed=false&subtasks=true&page=0`,
+        { headers:{ Authorization: API_TOKEN } }
+      );
+      const d = await r.json();
+      allTasks = (d.tasks||[]).filter(t => {
+        const s = (t.status?.status||'').toLowerCase();
+        return !s.includes('published') && !s.includes('closed');
+      });
+      renderTabs();
+      renderTasks(allTasks);
+    } catch(e) {
+      document.getElementById('task-content').innerHTML = `<div class="error-msg">Failed to load: ${e.message}</div>`;
+    }
+  }
+
+  function renderTabs() {
+    // Build unique statuses from actual task data, preserving ClickUp names
+    const statusSet = {};
+    for (const t of allTasks) {
+      const s = t.status?.status || 'open';
+      const color = t.status?.color || '#6b7280';
+      if (!statusSet[s]) statusSet[s] = { color, count: 0 };
+      statusSet[s].count++;
+    }
+
+    document.getElementById('status-tabs').innerHTML = `
+      <div class="status-tabs">
+        <div class="tab all ${activeTab === 'all' ? 'active-tab' : ''}" onclick="selectTab('all')">
+          <span class="tab-dot"></span>
+          All
+          <span class="tab-count">${allTasks.length}</span>
+        </div>
+        ${Object.entries(statusSet).map(([s, { color, count }]) => `
+          <div class="tab ${activeTab === s ? 'active-tab' : ''}"
+               style="${activeTab === s ? `background:${color};border-color:${color}` : `--dot-color:${color}`}"
+               onclick="selectTab('${s.replace(/'/g, "\\'")}')">
+            <span class="tab-dot" style="background:${activeTab === s ? 'white' : color}"></span>
+            ${s}
+            <span class="tab-count">${count}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  function selectTab(tab) {
+    activeTab = tab;
+    renderTabs();
+    const filtered = tab === 'all' ? allTasks : allTasks.filter(t => (t.status?.status || 'open') === tab);
+    renderTasks(filtered);
+  }
+
+  function renderTasks(tasks) {
+    const inProgress = tasks.filter(t => statusClass(t.status?.status) === 'progress').length;
+    const open       = tasks.filter(t => statusClass(t.status?.status) === 'open').length;
+
+    document.getElementById('count-total').textContent    = tasks.length;
+    document.getElementById('count-progress').textContent = inProgress;
+    document.getElementById('count-open').textContent     = open;
+    document.getElementById('footer').textContent         = `Last refreshed ${new Date().toLocaleTimeString()}`;
+
+    // Group by client
     const groups = {};
     for (const t of tasks) {
-      const client = t.folder?.name || t.list?.name || 'Other';
-      const cleanClient = client.replace(/\s*🔸\s*$/, '').trim();
-      if (!groups[cleanClient]) groups[cleanClient] = [];
-      groups[cleanClient].push(t);
+      const client = (t.folder?.name || t.list?.name || 'Other').replace(/\s*🔸\s*$/, '').trim();
+      if (!groups[client]) groups[client] = [];
+      groups[client].push(t);
     }
-    return groups;
-  }
 
-  async function render() {
-    try {
-      const tasks = await fetchTasks();
-      const filtered = tasks.filter(t => {
-        const s = t.status?.status?.toLowerCase() || '';
-        return !s.includes('published') && !s.includes('completed') && !s.includes('closed');
-      });
-
-      const inProgress = filtered.filter(t => (t.status?.status || '').toLowerCase().includes('progress')).length;
-      const open = filtered.filter(t => statusClass(t.status?.status || '') === 'open').length;
-      const groups = groupByClient(filtered);
-
-      let html = `
-        <header>
-          <h1>${getGreeting()}, Sofiya!</h1>
-          <p class="date">${formatDate()}</p>
-        </header>
-        <div class="summary">
-          <div class="summary-card total">
-            <div class="number">${filtered.length}</div>
-            <div class="label">Total Tasks</div>
-          </div>
-          <div class="summary-card in-progress">
-            <div class="number">${inProgress}</div>
-            <div class="label">In Progress</div>
-          </div>
-          <div class="summary-card open">
-            <div class="number">${open}</div>
-            <div class="label">Open</div>
-          </div>
+    let html = `
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">All Tasks</span>
+          <span class="card-count">${tasks.length} tasks</span>
         </div>
-      `;
+        <table>
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Task</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
 
-      for (const [client, clientTasks] of Object.entries(groups)) {
+    for (const [client, clientTasks] of Object.entries(groups)) {
+      const color = clientColor(client);
+      clientTasks.forEach(t => {
         html += `
-          <div class="client-section">
-            <div class="client-title">${client}</div>
-            <table>
-              <thead><tr><th>Task</th><th>Status</th></tr></thead>
-              <tbody>
-                ${clientTasks.map(t => `
-                  <tr>
-                    <td class="task-name">${t.name}</td>
-                    <td>${badge(t.status?.status || 'open')}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
+          <tr>
+            <td class="client">
+              <span class="client-dot" style="background:${color}"></span>${client}
+            </td>
+            <td class="task-name">${t.name}</td>
+            <td>${badge(t.status?.status||'open')}</td>
+          </tr>
         `;
-      }
-
-      html += `<footer>Last refreshed ${new Date().toLocaleTimeString()} · Sofiya's Dashboard</footer>`;
-      document.getElementById('app').innerHTML = html;
-    } catch (e) {
-      document.getElementById('app').innerHTML = `<div class="error">Failed to load tasks: ${e.message}</div>`;
+      });
     }
+
+    html += `</tbody></table></div>`;
+    document.getElementById('task-content').innerHTML = html;
   }
 
-  render();
+  // Search filter
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('greeting').textContent  = greeting();
+    document.getElementById('date-line').textContent = formatDate();
+
+    document.getElementById('search-input').addEventListener('input', e => {
+      const q = e.target.value.toLowerCase();
+      const base = activeTab === 'all' ? allTasks : allTasks.filter(t => (t.status?.status || 'open') === activeTab);
+      const filtered = base.filter(t =>
+        t.name.toLowerCase().includes(q) ||
+        (t.folder?.name||'').toLowerCase().includes(q)
+      );
+      renderTasks(filtered);
+    });
+
+    loadTasks();
+  });
 </script>
 </body>
 </html>
