@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sofiya's Task Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f1a;
+      color: #e8e8f0;
+      min-height: 100vh;
+      padding: 40px 24px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    header p.date {
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    .summary {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .summary-card {
+      background: #1a1a2e;
+      border: 1px solid #2d2d4a;
+      border-radius: 12px;
+      padding: 16px 28px;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .summary-card .number {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .summary-card .label {
+      font-size: 0.78rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+
+    .total .number { color: #a78bfa; }
+    .in-progress .number { color: #60a5fa; }
+    .open .number { color: #fbbf24; }
+
+    .client-section {
+      max-width: 900px;
+      margin: 0 auto 32px auto;
+    }
+
+    .client-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a78bfa;
+      margin-bottom: 10px;
+      padding-left: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1a1a2e;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #2d2d4a;
+    }
+
+    thead th {
+      background: #16162a;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    tbody tr {
+      border-top: 1px solid #2d2d4a;
+      transition: background 0.15s;
+    }
+
+    tbody tr:hover { background: #1f1f38; }
+
+    td {
+      padding: 13px 16px;
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+
+    td.task-name { color: #e8e8f0; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge.open      { background: #2d2a1a; color: #fbbf24; border: 1px solid #f59e0b44; }
+    .badge.progress  { background: #1a2540; color: #60a5fa; border: 1px solid #3b82f644; }
+    .badge.done      { background: #162318; color: #4ade80; border: 1px solid #22c55e44; }
+    .badge.blocked   { background: #2a1a1a; color: #f87171; border: 1px solid #ef444444; }
+
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .badge.open .dot     { background: #fbbf24; }
+    .badge.progress .dot { background: #60a5fa; }
+    .badge.done .dot     { background: #4ade80; }
+    .badge.blocked .dot  { background: #f87171; }
+
+    .loading, .error {
+      text-align: center;
+      padding: 80px 20px;
+      color: #6b7280;
+      font-size: 1rem;
+    }
+
+    .error { color: #f87171; }
+
+    footer {
+      text-align: center;
+      margin-top: 48px;
+      color: #3d3d5c;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app"><div class="loading">Loading your tasks…</div></div>
+
+<script>
+  const API_TOKEN = 'pk_95357634_FPPC81WUERSKVR1COBIVC3CS4BY451WG';
+  const USER_ID   = '95357634';
+
+  function getGreeting() {
+    const h = new Date().getHours();
+    if (h < 12) return '☀️ Good morning';
+    if (h < 18) return '👋 Good afternoon';
+    return '🌙 Good evening';
+  }
+
+  function formatDate() {
+    return new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  function statusClass(status) {
+    const s = status.toLowerCase();
+    if (s.includes('progress')) return 'progress';
+    if (s.includes('done') || s.includes('complete') || s.includes('published')) return 'done';
+    if (s.includes('block')) return 'blocked';
+    return 'open';
+  }
+
+  function statusLabel(status) {
+    const s = status.toLowerCase();
+    if (s.includes('progress')) return 'In Progress';
+    if (s.includes('done') || s.includes('complete') || s.includes('published')) return 'Done';
+    if (s.includes('block')) return 'Blocked';
+    return 'Open';
+  }
+
+  function badge(status) {
+    const cls = statusClass(status);
+    return `<span class="badge ${cls}"><span class="dot"></span>${statusLabel(status)}</span>`;
+  }
+
+  async function fetchTasks() {
+    const url = `https://api.clickup.com/api/v2/team/${await getTeamId()}/task?assignees[]=${USER_ID}&include_closed=false&subtasks=true&page=0`;
+    const res = await fetch(url, { headers: { Authorization: API_TOKEN } });
+    const data = await res.json();
+    return data.tasks || [];
+  }
+
+  async function getTeamId() {
+    const res = await fetch('https://api.clickup.com/api/v2/team', { headers: { Authorization: API_TOKEN } });
+    const data = await res.json();
+    return data.teams[0].id;
+  }
+
+  function groupByClient(tasks) {
+    const groups = {};
+    for (const t of tasks) {
+      const client = t.folder?.name || t.list?.name || 'Other';
+      const cleanClient = client.replace(/\s*🔸\s*$/, '').trim();
+      if (!groups[cleanClient]) groups[cleanClient] = [];
+      groups[cleanClient].push(t);
+    }
+    return groups;
+  }
+
+  async function render() {
+    try {
+      const tasks = await fetchTasks();
+      const filtered = tasks.filter(t => {
+        const s = t.status?.status?.toLowerCase() || '';
+        return !s.includes('published') && !s.includes('completed') && !s.includes('closed');
+      });
+
+      const inProgress = filtered.filter(t => (t.status?.status || '').toLowerCase().includes('progress')).length;
+      const open = filtered.filter(t => statusClass(t.status?.status || '') === 'open').length;
+      const groups = groupByClient(filtered);
+
+      let html = `
+        <header>
+          <h1>${getGreeting()}, Sofiya!</h1>
+          <p class="date">${formatDate()}</p>
+        </header>
+        <div class="summary">
+          <div class="summary-card total">
+            <div class="number">${filtered.length}</div>
+            <div class="label">Total Tasks</div>
+          </div>
+          <div class="summary-card in-progress">
+            <div class="number">${inProgress}</div>
+            <div class="label">In Progress</div>
+          </div>
+          <div class="summary-card open">
+            <div class="number">${open}</div>
+            <div class="label">Open</div>
+          </div>
+        </div>
+      `;
+
+      for (const [client, clientTasks] of Object.entries(groups)) {
+        html += `
+          <div class="client-section">
+            <div class="client-title">${client}</div>
+            <table>
+              <thead><tr><th>Task</th><th>Status</th></tr></thead>
+              <tbody>
+                ${clientTasks.map(t => `
+                  <tr>
+                    <td class="task-name">${t.name}</td>
+                    <td>${badge(t.status?.status || 'open')}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      html += `<footer>Last refreshed ${new Date().toLocaleTimeString()} · Sofiya's Dashboard</footer>`;
+      document.getElementById('app').innerHTML = html;
+    } catch (e) {
+      document.getElementById('app').innerHTML = `<div class="error">Failed to load tasks: ${e.message}</div>`;
+    }
+  }
+
+  render();
+</script>
+</body>
+</html>
