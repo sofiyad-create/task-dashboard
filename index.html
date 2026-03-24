@@ -363,6 +363,209 @@
       font-size: 0.78rem;
       color: #d1d5db;
     }
+
+    /* ══════════════════════════════════════
+       WEEKLY PRIORITIES VIEW
+       ══════════════════════════════════════ */
+
+    #view-weekly { display: none; }
+
+    .weekly-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+    }
+
+    @media (max-width: 960px) {
+      .weekly-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── Tier Cards ── */
+    .tier-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    .tier-header {
+      padding: 16px 24px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tier-header .tier-count {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.07);
+    }
+
+    .tier-1 .tier-header { background: #fef2f2; color: #991b1b; border-bottom: 1px solid #fecaca; }
+    .tier-2 .tier-header { background: #fffbeb; color: #92400e; border-bottom: 1px solid #fde68a; }
+    .tier-3 .tier-header { background: #f0fdf4; color: #166534; border-bottom: 1px solid #bbf7d0; }
+
+    .tier-body { padding: 4px 0; }
+
+    .client-section { border-bottom: 1px solid #f4f5f7; }
+    .client-section:last-child { border-bottom: none; }
+
+    .client-label {
+      padding: 12px 24px 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .client-label .cdot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .task-row {
+      padding: 7px 24px 7px 42px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.85rem;
+      line-height: 1.55;
+    }
+    .task-row:last-child { padding-bottom: 14px; }
+
+    .task-row .bullet {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #d1d5db;
+      margin-top: 8px;
+      flex-shrink: 0;
+    }
+
+    .task-row .task-info { flex: 1; }
+    .task-row .task-info strong { font-weight: 600; color: #1a1f3a; }
+    .task-row .task-info .detail { color: #6b7280; }
+
+    .src-tag {
+      display: inline-block;
+      font-size: 0.62rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-left: 5px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .src-tag.cal     { background: #dbeafe; color: #1e40af; }
+    .src-tag.cu      { background: #ede9fe; color: #5b21b6; }
+    .src-tag.email   { background: #fce7f3; color: #9d174d; }
+    .src-tag.manual  { background: #f1f5f9; color: #475569; }
+    .src-tag.overdue { background: #fef2f2; color: #991b1b; font-weight: 700; }
+
+    /* ── Sidebar Cards ── */
+    .side-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    .side-card-title {
+      padding: 14px 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1a1f3a;
+      background: #f8fafc;
+      border-bottom: 1px solid #f0f0f5;
+    }
+
+    .sched-day {
+      padding: 10px 20px 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #3b82f6;
+      border-top: 1px solid #f0f0f5;
+    }
+    .sched-day:first-child { border-top: none; }
+    .sched-day.today { color: #ef4444; }
+
+    .sched-row {
+      padding: 4px 20px;
+      font-size: 0.8rem;
+      display: flex;
+      gap: 10px;
+    }
+    .sched-row:last-child { padding-bottom: 10px; }
+
+    .sched-time {
+      width: 40px;
+      flex-shrink: 0;
+      color: #9ca3af;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      font-size: 0.78rem;
+    }
+    .sched-event { flex: 1; color: #374151; }
+    .sched-event.meeting { font-weight: 700; color: #3b82f6; }
+    .sched-event.ooo { color: #9ca3af; font-style: italic; }
+
+    .email-row {
+      padding: 10px 20px;
+      border-bottom: 1px solid #f4f5f7;
+    }
+    .email-row:last-child { border-bottom: none; }
+    .email-from { font-weight: 700; font-size: 0.8rem; color: #1a1f3a; }
+    .email-action { font-size: 0.78rem; color: #6b7280; margin-top: 2px; }
+
+    .legend-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 14px 20px;
+    }
+
+    /* ── Weekly Metrics ── */
+    .weekly-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .wm-card {
+      border-radius: 16px;
+      padding: 18px 20px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .wm-card::after {
+      content: '';
+      position: absolute;
+      bottom: -15px; right: -15px;
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+    .wm-card .wm-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.85; margin-bottom: 6px; }
+    .wm-card .wm-num { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+    .wm-card .wm-sub { font-size: 0.72rem; opacity: 0.7; margin-top: 3px; }
+
+    .wm-card.wm-urgent   { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .wm-card.wm-important { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .wm-card.wm-plan      { background: linear-gradient(135deg, #10b981, #059669); }
+    .wm-card.wm-emails    { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
   </style>
 </head>
 <body>
@@ -370,15 +573,17 @@
 <!-- Sidebar -->
 <nav class="sidebar">
   <div class="logo">S</div>
-  <div class="nav-icon active" title="Tasks">📋</div>
-  <div class="nav-icon" title="Calendar">📅</div>
+  <div class="nav-icon active" title="Tasks" data-view="tasks">📋</div>
+  <div class="nav-icon" title="Weekly Priorities" data-view="weekly">📅</div>
   <div class="nav-icon" title="Activity">⚡</div>
   <div class="nav-icon" title="Settings">⚙️</div>
   <div class="avatar">SD</div>
 </nav>
 
-<!-- Main Content -->
-<div class="main">
+<!-- ════════════════════════════════════
+     VIEW 1 — TASKS (original)
+     ════════════════════════════════════ -->
+<div class="main" id="view-tasks">
   <div class="header">
     <div class="header-left">
       <h1 id="greeting">My Tasks</h1>
@@ -415,6 +620,255 @@
   <div id="task-content"><div class="loading">Loading your tasks…</div></div>
 
   <div class="footer" id="footer"></div>
+</div>
+
+<!-- ════════════════════════════════════
+     VIEW 2 — WEEKLY PRIORITIES
+     ════════════════════════════════════ -->
+<div class="main" id="view-weekly">
+  <div class="header">
+    <div class="header-left">
+      <h1>📅 Weekly Priorities</h1>
+      <p>March 24 – 28, 2026 · Compiled from ClickUp, Calendar, Gmail &amp; manual list</p>
+    </div>
+  </div>
+
+  <!-- Weekly Metrics -->
+  <div class="weekly-metrics">
+    <div class="wm-card wm-urgent">
+      <div class="wm-label">Tier 1 — Urgent</div>
+      <div class="wm-num">17</div>
+      <div class="wm-sub">Must do this week</div>
+    </div>
+    <div class="wm-card wm-important">
+      <div class="wm-label">Tier 2 — Important</div>
+      <div class="wm-num">17</div>
+      <div class="wm-sub">Should complete</div>
+    </div>
+    <div class="wm-card wm-plan">
+      <div class="wm-label">Tier 3 — Plan</div>
+      <div class="wm-num">15</div>
+      <div class="wm-sub">Fit in if possible</div>
+    </div>
+    <div class="wm-card wm-emails">
+      <div class="wm-label">Emails</div>
+      <div class="wm-num">10</div>
+      <div class="wm-sub">Need response</div>
+    </div>
+  </div>
+
+  <div class="weekly-layout">
+    <div class="weekly-main">
+
+      <!-- ═══ TIER 1 ═══ -->
+      <div class="tier-card tier-1">
+        <div class="tier-header">🔴 Tier 1 — Urgent / Must Do <span class="tier-count">17 items</span></div>
+        <div class="tier-body">
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#3b82f6"></span> Deux par Deux</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Review collection promo banner design</strong> <span class="detail">— Haydée tagged you in Figma, marked QA</span> <span class="src-tag email">email</span><span class="src-tag cu">clickup</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Fake card: record Loom + new options</strong> <span class="detail">— First iteration of collection promo card</span> <span class="src-tag cal">Tue 12:30</span><span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Mappy Google Form for store locator</strong> <span class="src-tag overdue">overdue Mar 22</span> <span class="src-tag cal">Tue 12:00</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Mini cart / bundles</strong> <span class="detail">— Respond to Haydée's Figma questions before dev</span> <span class="src-tag cal">Thu 11:00</span><span class="src-tag email">email</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Email preferences: Klaviyo ↔ Shopify sync</strong> <span class="detail">— Discuss approach with Antoine</span> <span class="src-tag overdue">overdue Mar 23</span><span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Rollout access</strong> <span class="detail">— Vianna confirmed sign-up. Complete registration</span> <span class="src-tag cal">Wed 14:00</span><span class="src-tag email">email</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Weekly LakeHouse × 2x2 meeting</strong> <span class="detail">— Prep updates on all items</span> <span class="src-tag cal">Fri 13:30</span></div></div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#8b5cf6"></span> Mirage</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Questionnaire</strong> <span class="detail">— Geneviève waiting to send to ambassadors</span> <span class="src-tag cal">Tue 8:00</span><span class="src-tag email">email</span><span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Images</strong> <span class="detail">— Tied to questionnaire/project kick-off</span> <span class="src-tag manual">manual</span></div></div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#ef4444"></span> CHAP</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Translations</strong> <span class="detail">— Antoine confirmed unit price needs dev work</span> <span class="src-tag cal">Tue 14:30</span><span class="src-tag email">email</span><span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Pick up tag</strong> <span class="detail">— Create metafield/tag for pickup orders</span> <span class="src-tag cu">due Mar 24</span><span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Catalogue categories</strong> <span class="detail">— Icons not on top of collapsible menu</span> <span class="src-tag manual">manual</span></div></div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#f59e0b"></span> Prime Vape</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Translate banner</strong> <span class="detail">— Find the promo</span> <span class="src-tag cal">Tue 9:30</span><span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>FED OOS — Province test</strong> <span class="src-tag cal">Wed 9:00</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Print solution</strong> <span class="src-tag cal">Thu 10:30</span></div></div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#10b981"></span> AMP</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Translate product specs + metafield variants</strong> <span class="detail">— Alexandre asked if metaobjects ready</span> <span class="src-tag cal">Tue 11:00</span><span class="src-tag email">email</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>AMP block</strong> <span class="detail">— Reply re: Gorgias + Antoine's picto forward</span> <span class="src-tag cal">Tue 9:00</span><span class="src-tag email">email</span></div></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ═══ TIER 2 ═══ -->
+      <div class="tier-card tier-2">
+        <div class="tier-header">🟡 Tier 2 — Important / Should Complete <span class="tier-count">17 items</span></div>
+        <div class="tier-body">
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#3b82f6"></span> Deux par Deux (continued)</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Algolia static page search</strong> <span class="detail">— Decide which pages to show</span> <span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Mega menu category update</strong> <span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Blog + promo banner + filters</strong> <span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Obibox / PDP shipping estimate</strong> <span class="src-tag overdue">overdue Mar 5</span><span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Dedicated app page</strong> <span class="src-tag cal">Fri 13:00</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>PDP FAQ</strong> <span class="src-tag cal">Fri 13:30</span></div></div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#ec4899"></span> Artist by Marilyn</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Metafield cleanup</strong> <span class="detail">— In progress in ClickUp</span> <span class="src-tag cu">due Mar 24</span><span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Product landing page</strong> <span class="src-tag cu">due Mar 24</span><span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Badge system — send suggestion</strong> <span class="src-tag cu">due Mar 24</span><span class="src-tag manual">manual</span></div></div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#14b8a6"></span> Pronature</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Lookbook URL</strong> <span class="src-tag overdue">overdue Mar 1</span><span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Kangaroo bug (theme change)</strong> <span class="src-tag manual">manual</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>B2B accounts</strong> <span class="detail">— Laurie emailed re: member-buyer + B2C</span> <span class="src-tag email">email</span><span class="src-tag manual">manual</span></div></div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#6366f1"></span> Agua</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Vanité + poignée</strong> <span class="detail">— Email Skander</span> <span class="src-tag manual">manual</span></div></div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#f97316"></span> Gorgias (cross-client)</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Meeting with Gavin Martin</strong> <span class="detail">— Prep Passion Diecast context</span> <span class="src-tag cal">Wed 11:00</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Gorgias Academy</strong> <span class="src-tag cal">Wed 11:30</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Passion Diecast × Gorgias</strong> <span class="src-tag cal">Wed 9:30</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Gorgias implementation (general)</strong> <span class="detail">— In progress</span> <span class="src-tag cu">due Mar 24</span></div></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ═══ TIER 3 ═══ -->
+      <div class="tier-card tier-3">
+        <div class="tier-header">🟢 Tier 3 — Plan / Fit In Where Possible <span class="tier-count">15 items</span></div>
+        <div class="tier-body">
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#64748b"></span> Cross-Client Operational (Friday)</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Add hours to monthly reviews</strong> <span class="src-tag cal">Fri 9:30</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Page optimization scores — all clients</strong> <span class="src-tag cal">Fri 10:00</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>App lists — all clients</strong> <span class="src-tag cal">Fri 10:30</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>QA checklist — each client</strong> <span class="src-tag cal">Fri 11:00</span></div></div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#64748b"></span> Other Calendar Tasks</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>AbM video field QA + publish</strong> <span class="src-tag cal">Tue 11:30</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>AbM bundle template remove (AB test)</strong> <span class="src-tag cal">Fri 11:30</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>QA: IDC GWP — validate scenarios</strong> <span class="src-tag cal">Wed 14:30</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Shopify Markets: checkout &amp; customer</strong> <span class="src-tag cal">Tue 17:00</span></div></div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#64748b"></span> Overdue ClickUp Backlog</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>CHAP shipping/returns translations</strong> <span class="detail">— In progress</span> <span class="src-tag overdue">overdue Mar 18</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Shoppable images / shop the look scope</strong> <span class="src-tag overdue">URGENT — overdue Mar 18</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Block bot traffic (2x2)</strong> <span class="src-tag overdue">HIGH — overdue Mar 21</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>International web optimization (2x2)</strong> <span class="src-tag cu">HIGH — due Mar 24</span></div></div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-label"><span class="cdot" style="background:#64748b"></span> Internal / Admin</div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>(Claude) Connect Toggl</strong> <span class="src-tag cal">Tue 15:30</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Angelcare SEO Portal</strong> <span class="detail">— Audrey shared spreadsheet</span> <span class="src-tag email">email</span></div></div>
+            <div class="task-row"><span class="bullet"></span><div class="task-info"><strong>Yumi: Subscription unsubscribe option</strong> <span class="src-tag cu">HIGH — due Mar 24</span></div></div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /weekly-main -->
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <div class="weekly-sidebar">
+
+      <!-- Schedule -->
+      <div class="side-card">
+        <div class="side-card-title">📅 Daily Schedule</div>
+
+        <div class="sched-day today">Tuesday, Mar 24 — Today</div>
+        <div class="sched-row"><span class="sched-time">8:00</span><span class="sched-event">Mirage questionnaire validation</span></div>
+        <div class="sched-row"><span class="sched-time">8:30</span><span class="sched-event">2x2 quick wins</span></div>
+        <div class="sched-row"><span class="sched-time">9:00</span><span class="sched-event">AMP tasks</span></div>
+        <div class="sched-row"><span class="sched-time">9:30</span><span class="sched-event">Prime Vape banner</span></div>
+        <div class="sched-row"><span class="sched-time">10:00</span><span class="sched-event meeting">Progression Meeting</span></div>
+        <div class="sched-row"><span class="sched-time">11:00</span><span class="sched-event">AMP: translate specs</span></div>
+        <div class="sched-row"><span class="sched-time">11:30</span><span class="sched-event">AbM video QA + publish</span></div>
+        <div class="sched-row"><span class="sched-time">12:00</span><span class="sched-event">Mappy Google Form</span></div>
+        <div class="sched-row"><span class="sched-time">12:30</span><span class="sched-event">Loom: fake card</span></div>
+        <div class="sched-row"><span class="sched-time">13:00</span><span class="sched-event ooo">Out — medical appt</span></div>
+        <div class="sched-row"><span class="sched-time">14:30</span><span class="sched-event">CHAP tasks</span></div>
+        <div class="sched-row"><span class="sched-time">15:30</span><span class="sched-event">Connect Toggl</span></div>
+        <div class="sched-row"><span class="sched-time">16:30</span><span class="sched-event">QA CHAP</span></div>
+        <div class="sched-row"><span class="sched-time">17:00</span><span class="sched-event">Shopify Markets</span></div>
+
+        <div class="sched-day">Wednesday, Mar 25</div>
+        <div class="sched-row"><span class="sched-time">9:00</span><span class="sched-event">Prime Vape FED OOS test</span></div>
+        <div class="sched-row"><span class="sched-time">9:30</span><span class="sched-event">Passion Diecast × Gorgias</span></div>
+        <div class="sched-row"><span class="sched-time">11:00</span><span class="sched-event meeting">Gavin Martin (Gorgias)</span></div>
+        <div class="sched-row"><span class="sched-time">11:30</span><span class="sched-event">Gorgias Academy</span></div>
+        <div class="sched-row"><span class="sched-time">14:00</span><span class="sched-event">2x2 rollout access</span></div>
+        <div class="sched-row"><span class="sched-time">14:30</span><span class="sched-event">QA: IDC GWP scenarios</span></div>
+
+        <div class="sched-day">Thursday, Mar 26</div>
+        <div class="sched-row"><span class="sched-time">9:00</span><span class="sched-event meeting">Weekly Dev Checking</span></div>
+        <div class="sched-row"><span class="sched-time">10:30</span><span class="sched-event">Prime Vape print solution</span></div>
+        <div class="sched-row"><span class="sched-time">11:00</span><span class="sched-event">2x2 mini cart / bundles</span></div>
+
+        <div class="sched-day">Friday, Mar 27</div>
+        <div class="sched-row"><span class="sched-time">9:30</span><span class="sched-event">Hours → monthly reviews</span></div>
+        <div class="sched-row"><span class="sched-time">10:00</span><span class="sched-event">Page optimization scores</span></div>
+        <div class="sched-row"><span class="sched-time">10:30</span><span class="sched-event">App lists — all clients</span></div>
+        <div class="sched-row"><span class="sched-time">11:00</span><span class="sched-event">QA checklist — all clients</span></div>
+        <div class="sched-row"><span class="sched-time">11:30</span><span class="sched-event">AbM bundle template (AB)</span></div>
+        <div class="sched-row"><span class="sched-time">13:00</span><span class="sched-event">2x2 dedicated app page</span></div>
+        <div class="sched-row"><span class="sched-time">13:30</span><span class="sched-event">2x2 PDP FAQ</span></div>
+        <div class="sched-row"><span class="sched-time">13:30</span><span class="sched-event meeting">Weekly LakeHouse × 2x2</span></div>
+      </div>
+
+      <!-- Emails -->
+      <div class="side-card">
+        <div class="side-card-title">📧 Emails to Respond To</div>
+        <div class="email-row"><div class="email-from">Geneviève — Mirage</div><div class="email-action">Send the questionnaire — she's waiting</div></div>
+        <div class="email-row"><div class="email-from">Alexandre — AMP</div><div class="email-action">Confirm if metaobjects are ready to fill</div></div>
+        <div class="email-row"><div class="email-from">Alexandre — AMP</div><div class="email-action">Respond re: Gorgias discount setup</div></div>
+        <div class="email-row"><div class="email-from">Laurie — Pronature</div><div class="email-action">Follow up on B2B member-buyer</div></div>
+        <div class="email-row"><div class="email-from">Laurie — Pronature</div><div class="email-action">Éléments perdus B2C — status</div></div>
+        <div class="email-row"><div class="email-from">Geneviève — Moment Factory</div><div class="email-action">Schedule call re: metaobject placement</div></div>
+        <div class="email-row"><div class="email-from">Vianna — Shopify</div><div class="email-action">Complete rollout sign-up for 2x2</div></div>
+        <div class="email-row"><div class="email-from">Haydée — Figma</div><div class="email-action">Reply re: mini cart upsell vs cart</div></div>
+        <div class="email-row"><div class="email-from">Antoine — Internal</div><div class="email-action">Review AMP picto forwarded assets</div></div>
+        <div class="email-row"><div class="email-from">Cécile — CHAP</div><div class="email-action">Coordinate dev for unit translation</div></div>
+      </div>
+
+      <!-- Legend -->
+      <div class="side-card">
+        <div class="side-card-title">🏷️ Source Legend</div>
+        <div class="legend-bar">
+          <span class="src-tag cal">calendar</span>
+          <span class="src-tag cu">clickup</span>
+          <span class="src-tag email">email</span>
+          <span class="src-tag manual">manual list</span>
+          <span class="src-tag overdue">overdue</span>
+        </div>
+      </div>
+
+    </div><!-- /weekly-sidebar -->
+  </div><!-- /weekly-layout -->
+
+  <div class="footer">Week of March 24, 2026 — generated from ClickUp + Google Calendar + Gmail</div>
 </div>
 
 <script>
@@ -492,7 +946,6 @@
   }
 
   function renderTabs() {
-    // Build unique statuses from actual task data, preserving ClickUp names
     const statusSet = {};
     for (const t of allTasks) {
       const s = t.status?.status || 'open';
@@ -537,7 +990,6 @@
     document.getElementById('count-open').textContent     = open;
     document.getElementById('footer').textContent         = `Last refreshed ${new Date().toLocaleTimeString()}`;
 
-    // Group by client
     const groups = {};
     for (const t of tasks) {
       const client = (t.folder?.name || t.list?.name || 'Other').replace(/\s*🔸\s*$/, '').trim();
@@ -581,7 +1033,15 @@
     document.getElementById('task-content').innerHTML = html;
   }
 
-  // Search filter
+  /* ── View switching ── */
+  function switchView(viewName) {
+    document.querySelectorAll('.nav-icon').forEach(n => n.classList.remove('active'));
+    document.querySelector(`[data-view="${viewName}"]`).classList.add('active');
+
+    document.getElementById('view-tasks').style.display  = viewName === 'tasks'  ? 'block' : 'none';
+    document.getElementById('view-weekly').style.display  = viewName === 'weekly' ? 'block' : 'none';
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('greeting').textContent  = greeting();
     document.getElementById('date-line').textContent = formatDate();
@@ -594,6 +1054,11 @@
         (t.folder?.name||'').toLowerCase().includes(q)
       );
       renderTasks(filtered);
+    });
+
+    // Nav click handlers
+    document.querySelectorAll('.nav-icon[data-view]').forEach(icon => {
+      icon.addEventListener('click', () => switchView(icon.dataset.view));
     });
 
     loadTasks();
