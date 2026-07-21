@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sofiya's Task Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f4f5f7;
+      color: #1a1a2e;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 72px;
+      background: #1a1f3a;
+      border-radius: 0 24px 24px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 0;
+      gap: 8px;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 10;
+    }
+
+    .sidebar .logo {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, #ff6b6b, #ff1e7e);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: white; font-weight: 800;
+    }
+
+    .sidebar .nav-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: #5a6080;
+      font-size: 1.1rem;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .sidebar .nav-icon:hover { background: #252b4a; color: #fff; }
+    .sidebar .nav-icon.active { background: #2d3460; color: #ff6b6b; }
+
+    .sidebar .avatar {
+      margin-top: auto;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: white; font-size: 0.85rem;
+    }
+
+    /* ── Main ── */
+    .main {
+      margin-left: 72px;
+      flex: 1;
+      padding: 36px 32px;
+      max-width: 1100px;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .header-left h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #1a1f3a;
+    }
+
+    .header-left p {
+      color: #9ca3af;
+      font-size: 0.88rem;
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-size: 0.85rem;
+      color: #6b7280;
+      width: 200px;
+      outline: none;
+    }
+
+    .refresh-btn {
+      background: #1a1f3a;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .refresh-btn:hover { background: #252b4a; }
+
+    /* ── Metric Cards ── */
+    .weekly-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .wm-card {
+      border-radius: 16px;
+      padding: 20px;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .wm-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.85;
+    }
+
+    .wm-num {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .wm-sub {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      line-height: 1.2;
+    }
+
+    .wm-urgent { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .wm-important { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .wm-plan { background: linear-gradient(135deg, #10b981, #059669); }
+    .wm-emails { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+    /* ── Tier Cards ── */
+    .weekly-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .tier-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      border-left: 6px solid #e5e7eb;
+      margin-bottom: 24px;
+    }
+
+    .tier-1 { border-left-color: #ef4444; }
+    .tier-2 { border-left-color: #f59e0b; }
+    .tier-3 { border-left-color: #10b981; }
+
+    .tier-header {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1a1f3a;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tier-count {
+      font-size: 0.8rem;
+      background: #f3f4f6;
+      padding: 4px 12px;
+      border-radius: 20px;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    .client-section {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .client-section:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .client-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1a1f3a;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cdot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .task-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: #4b5563;
+      align-items: flex-start;
+    }
+
+    .bullet {
+      color: #d1d5db;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .task-info {
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    .task-info strong {
+      color: #1a1f3a;
+      font-weight: 700;
+    }
+
+    .detail {
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+
+    /* ── Source Tags ── */
+    .src-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 4px;
+      color: white;
+    }
+
+    .src-tag.cal { background: #3b82f6; }
+    .src-tag.cu { background: #8b5cf6; }
+    .src-tag.email { background: #ec4899; }
+    .src-tag.manual { background: #6b7280; }
+    .src-tag.overdue { background: #ef4444; }
+
+    /* ── Sidebar ── */
+    .weekly-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .side-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .side-card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #1a1f3a;
+      margin-bottom: 16px;
+    }
+
+    .sched-day {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #1a1f3a;
+      margin-top: 12px;
+      margin-bottom: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .sched-day.today {
+      background: #fef2f2;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border-bottom: none;
+      margin-left: -20px;
+      margin-right: -20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      color: #991b1b;
+    }
+
+    .sched-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.8rem;
+      padding: 6px 0;
+      color: #6b7280;
+    }
+
+    .sched-time {
+      font-weight: 600;
+      color: #1a1f3a;
+      width: 40px;
+    }
+
+    .sched-event {
+      color: #4b5563;
+    }
+
+    .sched-event.meeting {
+      color: #1a1f3a;
+      font-weight: 600;
+      background: #f0f9ff;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .sched-event.ooo {
+      color: #dc2626;
+      font-weight: 600;
+      background: #fef2f2;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .email-row {
+      margin-bottom: 16px;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .email-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .email-from {
+      font-weight: 700;
+      color: #1a1f3a;
+      margin-bottom: 4px;
+    }
+
+    .email-action {
+      color: #6b7280;
+      margin-left: 0;
+    }
+
+    .legend-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #9ca3af;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    /* View toggles */
+    #view-weekly { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="logo">S</div>
+  <div class="nav-icon active" onclick="showView('weekly')">📅</div>
+  <div class="nav-icon" onclick="showView('tasks')">✓</div>
+  <div class="avatar">SD</div>
+</div>
+
+<div class="main" id="view-weekly">
+  <div class="header">
+    <div class="header-left">
+      <h1>📅 Weekly Priorities</h1>
+      <p>July 20 – July 24, 2026 · Compiled from ClickUp, Google Calendar &amp; Gmail · <strong>Today is Tue, July 21</strong>. Active backlog: <strong>77 ClickUp tasks</strong> across 15+ clients, with <strong>21 overdue</strong> and <strong>1 due today</strong> per this morning's daily summary. Key focus <strong>today</strong>: <strong>Passion Diecast POS formation on-site in Laval, 2–5 PM</strong>. Client-waiting: <strong>Deux par Deux</strong> (Seb sent SEO H1 details on collection pages; New collection overview due today; mega menu tags confirmed by Zac; Fri client sync), <strong>Experience Vinyl</strong> (Seth waiting on genre go-live, Klaviyo, sticky ATC, invoice now being paid), <strong>AMP Lock / amplock</strong> (Gorgias L2 escalation needs subdomain reply; Clément needs the B2C tag for Datablaster; add-back-H1s overdue), <strong>Artist par Marilyn</strong> (Etienne green-lit the Toki loyalty trial). Calendar this week: 6 meetings + ~20 focus blocks; Antoine OOO Tue–Wed (DotDev). Email: 30+ unread, ~8 need a response.</p>
+    </div>
+  </div>
+
+  <!-- Weekly Metrics -->
+  <div class="weekly-metrics">
+    <div class="wm-card wm-urgent">
+      <div class="wm-label">Tier 1 — Urgent</div>
+      <div class="wm-num">11</div>
+      <div class="wm-sub">Overdue + due today + client-blocking + waiting replies</div>
+    </div>
+    <div class="wm-card wm-important">
+      <div class="wm-label">Tier 2 — Important</div>
+      <div class="wm-num">40</div>
+      <div class="wm-sub">In progress + due this week</div>
+    </div>
+    <div class="wm-card wm-plan">
+      <div class="wm-label">Tier 3 — Plan</div>
+      <div class="wm-num">26</div>
+      <div class="wm-sub">Backlog &amp; on-hold</div>
+    </div>
+    <div class="wm-card wm-emails">
+      <div class="wm-label">Unread Emails</div>
+      <div class="wm-num">30+</div>
+      <div class="wm-sub">8 need a response</div>
+    </div>
+  </div>
+
+  <div class="weekly-layout">
+    <div class="weekly-main">
+
+      <!-- ═══ TIER 1 ═══ -->
+      <div class="tier-card tier-1">
+        <div class="tier-header">🔴 Tier 1 — Urgent / Overdue, Due Today, Meetings &amp; Blocking <span class="tier-count">11 items</span></div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#a78bfa"></span> Passion Diecast — On-Site TODAY + Overdue</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>LHG × Passion Diecast formation &amp; POS</strong> <span class="detail">— TODAY Tue July 21, 2–5 PM on-site in Laval (with D. Poirier); bring training material for the POS session</span> <span class="src-tag cal">calendar</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>MigrationPro (Smart Update) + Inventory migration</strong> <span class="detail">— overdue since 7/20 per the daily summary; needed to back the POS/inventory work</span> <span class="src-tag cu">clickup</span> <span class="src-tag overdue">overdue</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Redirects (use SEO skill)</strong> <span class="detail">— overdue since 7/20; part of the Performance workstream</span> <span class="src-tag cu">clickup</span> <span class="src-tag overdue">overdue</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#3b82f6"></span> Deux par Deux — Due Today + Client Waiting</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>New collection overview</strong> <span class="detail">— flagged "Due Today" in this morning's ClickUp daily summary (E-comm)</span> <span class="src-tag cu">clickup</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Seb (Apogée) — SEO open items, H1 on collection pages</strong> <span class="detail">— Seb replied overnight (Jul 21) with specifics: on any collection, "view crawled page" shows extra H1s. He's waiting on you; ties to the overdue "Add back H1s" task</span> <span class="src-tag email">email</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Mega menu tags (Janie &amp; Jack style)</strong> <span class="detail">— Zac confirmed "yes" (L1 only) July 18; build the red tags in the mega menu &amp; reply</span> <span class="src-tag email">email</span> <span class="src-tag cu">clickup</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Weekly LakeHouse × Deux par Deux</strong> <span class="detail">— Fri July 24, 1:30 PM (Teams, Clemence); come with menu + language/collection status</span> <span class="src-tag cal">calendar</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#22c55e"></span> Experience Vinyl — Client Waiting (Seth)</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Seth waiting on 4 threads</strong> <span class="detail">— "Are we close to going live?" (genre filtering), Klaviyo flow fixes, which sticky-ATC mobile version to use, and invoice (Seth confirmed Jul 20 he's told Rox to pay). Reply today.</span> <span class="src-tag email">email</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#8b5cf6"></span> AMP Lock / amplock — Escalations + Overdue</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Gorgias L2 escalation — FB/IG tickets not syncing</strong> <span class="detail">— Gorgias tech asked (Jul 20 PM) which subdomain you're on; amplock shows no Meta webhook activity. Reply to unblock.</span> <span class="src-tag email">email</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Confirm B2C tag for Datablaster (J7 Media)</strong> <span class="detail">— Clément asked (Jul 20) for the exact Shopify tag used for the B2C segment to integrate into Datablaster</span> <span class="src-tag email">email</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Add back H1s on collection pages</strong> <span class="detail">— overdue since 7/20 (Dev); the SEO fix Seb is asking about</span> <span class="src-tag cu">clickup</span> <span class="src-tag overdue">overdue</span></div></div>
+        </div>
+      </div>
+
+      <!-- ═══ TIER 2 ═══ -->
+      <div class="tier-card tier-2">
+        <div class="tier-header">🟡 Tier 2 — Important / In Progress &amp; Due This Week <span class="tier-count">40 items</span></div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#3b82f6"></span> Deux par Deux</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Customize client accounts (in progress) · Amazon order fulfillment (in progress) · Returns intl: Loop zones (in progress) · Document new features (in progress)</strong> <span class="detail">— active dev/QA work</span> <span class="src-tag cu">clickup</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>QA German (approved) · Dashboard with conversion rate (in QA)</strong> <span class="detail">— signed off / ready to ship</span> <span class="src-tag cu">clickup</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>DPD Q2 dashboard (focus Tue 9AM) · International sizes (focus Wed 12PM) · Feature documentation (focus Fri 3PM) · Collection clean up &amp; merge</strong> <span class="detail">— scheduled focus blocks this week</span> <span class="src-tag cu">clickup</span> <span class="src-tag cal">calendar</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#22c55e"></span> Experience Vinyl</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Genre tags (in QA) · Ongoing genre tagging · Pre-orders · Pre-orders revamp</strong> <span class="detail">— genre feature core; pre-orders refactor in flight</span> <span class="src-tag cu">clickup</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Review Smile setup · Split shipping (preorder vs in stock) · Gorgias × Wondemint · Videos from YT · Fulfillment message</strong> <span class="detail">— QA, integration &amp; content tasks</span> <span class="src-tag cu">clickup</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#8b5cf6"></span> AMP Lock</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Gorgias review (MCP, AI, audit) (in progress) · Migrate B2B customers to companies (in progress)</strong> <span class="detail">— Gorgias audit &amp; B2B migration active</span> <span class="src-tag cu">clickup</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Add icon on website (approved) · Moneris follow-up (focus Tue) · Rework the quiz · Auto custom discount B2B · Traduction FAQ · Commandes usinage</strong> <span class="detail">— Alexandre also asked to place the shop icon somewhere visible site-wide</span> <span class="src-tag cu">clickup</span> <span class="src-tag email">email</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#06b6d4"></span> Agua Canada</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>CRO plan · Monthly Meeting · Front Chat test · Returns form · Flow to not publish $0 products · Upsell carousel translation</strong> <span class="detail">— CRO plan &amp; monthly meeting next up</span> <span class="src-tag cu">clickup</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#ec4899"></span> Artist By Marilyn</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Loyalty app — start Toki free trial</strong> <span class="detail">— Etienne agreed (Jul 20) to trial Toki to validate; set it up</span> <span class="src-tag email">email</span> <span class="src-tag cu">clickup</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Review Gorgias guidance for AI agent (waiting approval) · Activate AI agent Gorgias · Gorgias AI Artist (focus Tue) · end artist AB test (focus Thu)</strong> <span class="detail">— push approvals + AB test through this week</span> <span class="src-tag cu">clickup</span> <span class="src-tag cal">calendar</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Messenger / Gorgias integration</strong> <span class="detail">— reconnection failed for Charlotte/Etienne; screenshots shared with Gorgias, awaiting next steps</span> <span class="src-tag email">email</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#f97316"></span> Sushi Taxi</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Pages QA (in QA, with Haydée) · EN translation</strong> <span class="detail">— migration QA review ongoing</span> <span class="src-tag cu">clickup</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#f59e0b"></span> Prime Vape</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Badges · Nettoyage collections · Sticky ATC AB test · Monthly Presentation · Contact Us broken page</strong> <span class="detail">— open E-comm &amp; performance tasks</span> <span class="src-tag cu">clickup</span></div></div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>QC separation (waiting approval) · App on expansion store (waiting client approval) · Myriam points-calc follow-up</strong> <span class="detail">— blocked on client; Myriam thread still awaiting your reply</span> <span class="src-tag cu">clickup</span> <span class="src-tag email">email</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#80caff"></span> IDC Dermo</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>V2 Cart Drawer · App list cleanup (waiting approval)</strong> <span class="detail">— "remove cart before LD" focus block Wed 10AM</span> <span class="src-tag cu">clickup</span> <span class="src-tag cal">calendar</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#a78bfa"></span> Passion Diecast</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Preorder configuration (in QA)</strong> <span class="detail">— performance task alongside the migration</span> <span class="src-tag cu">clickup</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#f5af19"></span> Mirage Robes et Beauté</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Image generation batch 1 (approved)</strong> <span class="detail">— now approved; proceed to the product migration next step</span> <span class="src-tag cu">clickup</span></div></div>
+        </div>
+      </div>
+
+      <!-- ═══ TIER 3 ═══ -->
+      <div class="tier-card tier-3">
+        <div class="tier-header">🟢 Tier 3 — Plan / Backlog &amp; On Hold <span class="tier-count">26 tasks</span></div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#3b82f6"></span> Deux par Deux — Backlog / On Hold</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Shopify Smart Pricing · Keepcart · Master style hero product · COGS in Intelligems · Klaviyo↔Shopify email prefs · Publish/unpublish flows · Complete the look · Algolia static page search · [new app] Review page revamp · Shop pay widget PDP vs checkout · DHL shipping worldwide · Text after missed call · Add Spanish language · German + Japanese + Decathlon (on hold)</strong> <span class="detail">— on hold pending roadmap prioritization</span> <span class="src-tag cu">clickup</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#06b6d4"></span> Agua Canada — On Hold</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Post purchase survey install · Multivariant kits · Best Buy stock sync (Mirakl) · B2B set up</strong> <span class="detail">— parked pending prioritization</span> <span class="src-tag cu">clickup</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#8b5cf6"></span> AMP Lock — Backlog</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Bundle bug (published/completed) · ERP (on hold) · Bundle creator idea (Alexandre)</strong> <span class="detail">— Alexandre floated a trio-bundle service offering to revisit</span> <span class="src-tag cu">clickup</span> <span class="src-tag email">email</span></div></div>
+        </div>
+
+        <div class="client-section">
+          <div class="client-label"><span class="cdot" style="background:#f5af19"></span> Eleganza · Bjorn · Pro Nature · Artist By Marilyn</div>
+          <div class="task-row"><span class="bullet">•</span><div class="task-info"><strong>Eleganza footer email form · Bjorn upsell app alternative · Pro Nature [B2B] new customer segments (on hold) · AByM landing-page AB test, HP videos, Judge.me styling</strong> <span class="detail">— cross-client backlog</span> <span class="src-tag cu">clickup</span></div></div>
+        </div>
+      </div>
+
+    </div><!-- /weekly-main -->
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <div class="weekly-sidebar">
+
+      <!-- Schedule -->
+      <div class="side-card">
+        <div class="side-card-title">📅 This Week's Schedule</div>
+
+        <div class="sched-day">Monday, July 20</div>
+        <div class="sched-row"><span class="sched-time">10:30</span><span class="sched-event meeting">Passation de comptes — Audrey L.</span></div>
+        <div class="sched-row"><span class="sched-time">10:30</span><span class="sched-event meeting">Weekly Product Team</span></div>
+        <div class="sched-row"><span class="sched-time">11:30</span><span class="sched-event meeting">Weekly Dev Meeting</span></div>
+
+        <div class="sched-day today">Tuesday, July 21 — TODAY</div>
+        <div class="sched-row"><span class="sched-time">9:00</span><span class="sched-event">Focus: DPD Q2 dashboard · Moneris FUP · Gorgias AI Artist</span></div>
+        <div class="sched-row"><span class="sched-time">13:00</span><span class="sched-event meeting">Gorgias webinar — "The Biggest Leap"</span></div>
+        <div class="sched-row"><span class="sched-time">14:00</span><span class="sched-event meeting">Passion Diecast formation &amp; POS (Laval)</span></div>
+        <div class="sched-row"><span class="sched-time">—</span><span class="sched-event ooo">Antoine OOO (DotDev)</span></div>
+
+        <div class="sched-day">Wednesday, July 22</div>
+        <div class="sched-row"><span class="sched-time">10:00</span><span class="sched-event">Focus: IDC remove cart before LD</span></div>
+        <div class="sched-row"><span class="sched-time">12:00</span><span class="sched-event">Focus: DPD import international sizes</span></div>
+        <div class="sched-row"><span class="sched-time">—</span><span class="sched-event ooo">Antoine OOO (DotDev)</span></div>
+
+        <div class="sched-day">Thursday, July 23</div>
+        <div class="sched-row"><span class="sched-time">9:00</span><span class="sched-event meeting">Weekly Dev Checking</span></div>
+        <div class="sched-row"><span class="sched-time">11:30</span><span class="sched-event">Focus: end artist AB test</span></div>
+
+        <div class="sched-day">Friday, July 24</div>
+        <div class="sched-row"><span class="sched-time">13:30</span><span class="sched-event meeting">Weekly LakeHouse × DPD (Teams)</span></div>
+        <div class="sched-row"><span class="sched-time">15:00</span><span class="sched-event">Focus: feature documentation</span></div>
+      </div>
+
+      <!-- Email & Client Responses -->
+      <div class="side-card">
+        <div class="side-card-title">⏳ Emails Needing a Response (8)</div>
+        <div class="email-row"><div class="email-from">Seb — Apogée / Deux par Deux 🔴</div><div class="email-action">Sent H1-on-collection-pages details overnight; reply with plan (ties to overdue "Add back H1s")</div></div>
+        <div class="email-row"><div class="email-from">Gorgias Tech (amplock) 🔴</div><div class="email-action">L2 escalation — confirm which subdomain; no Meta webhook activity on amplock</div></div>
+        <div class="email-row"><div class="email-from">Clément — J7 Media / AMP 🔴</div><div class="email-action">Confirm exact Shopify B2C tag to wire into Datablaster</div></div>
+        <div class="email-row"><div class="email-from">Seth — Experience Vinyl 🔴</div><div class="email-action">4 open threads: genre go-live, Klaviyo fixes, sticky-ATC mobile pick, invoice (paying)</div></div>
+        <div class="email-row"><div class="email-from">Etienne — Artist par Marilyn</div><div class="email-action">Green-lit Toki loyalty free trial — set up &amp; confirm</div></div>
+        <div class="email-row"><div class="email-from">Zac — Deux par Deux</div><div class="email-action">Confirmed "yes" on mega menu L1 tags — build &amp; reply</div></div>
+        <div class="email-row"><div class="email-from">Alexandre — AMP Lock</div><div class="email-action">Wants the shop icon placed somewhere visible site-wide as an ad reminder</div></div>
+        <div class="email-row"><div class="email-from">Myriam — Prime Vape</div><div class="email-action">Points calculation follow-up still pending a reply</div></div>
+      </div>
+
+      <!-- Legend -->
+      <div class="side-card">
+        <div class="side-card-title">🏷️ Source Legend</div>
+        <div class="legend-bar">
+          <span class="src-tag cal">calendar</span>
+          <span class="src-tag cu">clickup</span>
+          <span class="src-tag email">email</span>
+          <span class="src-tag overdue">overdue</span>
+        </div>
+      </div>
+
+    </div><!-- /weekly-sidebar -->
+  </div><!-- /weekly-layout -->
+
+  <div class="footer">Week of July 20 – July 24, 2026 — last refreshed July 21, 2026 at 09:00 EDT</div>
+</div><!-- /view-weekly -->
+
+<script>
+function showView(viewName) {
+  document.querySelectorAll('[id^="view-"]').forEach(el => el.style.display = 'none');
+  document.getElementById('view-' + viewName).style.display = 'block';
+  document.querySelectorAll('.nav-icon').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
